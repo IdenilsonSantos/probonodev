@@ -11,3 +11,15 @@ export function openWeatherApi(city: string){
 
     return response;
 }
+
+export function unsplashApi(query: string){
+  const apiKey = 'TNY6zcq1yuG9s6KTeJ0-3wzalsiUJZb-bs8FgQwtXDg';
+  const response = axios.get(`${'https://api.unsplash.com/search/photos?page=1'}`, {
+    params: {
+      'query': query,
+      'client_id': apiKey
+    }
+  })
+
+  return response;
+}

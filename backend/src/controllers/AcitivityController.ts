@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getActivities, openWeatherApi } from "../services/apis";
+import { getActivities, openWeatherApi, unsplashApi } from "../services/apis";
 import FilterConditions from "../utils/filterConditions";
 
 export default class ActivityController {
@@ -7,6 +7,11 @@ export default class ActivityController {
         const {name} = req.query;
 
         let suggestions = [];
+        let dataCreate:Array<Object> = [{}];
+
+        
+
+//uns.data.results[0].urls.regular
 
         try {
 
@@ -17,47 +22,24 @@ export default class ActivityController {
             const activity  = await getActivities();
         
             const { main } = climate.data.weather[0];
-
-            console.log(main)
     
-            switch (main) {
-                case 'Clouds':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
+            suggestions = FilterConditions(activity.data, main);
 
-                    case 'Rain':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
+            for (var i = 0; i < suggestions.length; i++){
+                //@ts-ignore
+                const el = suggestions[i].activity_title
+                const uns: any = await unsplashApi(el)
 
-                    case 'Storm':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
-
-                    case 'Sun':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
-
-                    case 'Snow':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
-
-                    case 'Clear':
-                    suggestions = FilterConditions(activity.data, main)
-                    res.status(200).json({city: climate.data.name, suggestions})
-                    break;
-            
-                default:
-                    break;
+                dataCreate.push({activity_title: el, photo_url: uns.data.results[0].urls.regular})
             }
+
+            res.status(200).json({city: climate.data.name, suggestions, dataCreate})
+                    
         }
 
         } catch (err) {
             return res.status(400).json({ error: "Activity registration failed" });
         }
     }
+
 }
