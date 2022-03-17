@@ -9,21 +9,22 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
   if (!token) {
     return res.status(401).send({ error: "No token provided" });
   }
-
-  if (token) {
-    jwt.verify(token, secret, (error, decoded) => {
-        if (error) {
-            return res.status(404).json({
-                message: error,
-                error
-            });
-        } else {
-            //@ts-ignore
-            res.userId = decoded.id;
-            next();
-        }
-    });
-} else {
-    return res.status(401).send({ error: "Token invalid" });
-}
+  
+    try {
+        jwt.verify(token, secret, (error, decoded) => {
+            if (error) {
+                return res.status(404).json({
+                    message: error,
+                    error
+                });
+            } else {
+                //@ts-ignore
+                req.userId = decoded.id;
+                next();
+            }
+        });
+    } catch (error) {
+        res.status(401).send();
+        return;
+    }
 };

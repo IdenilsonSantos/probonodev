@@ -4,12 +4,6 @@ import jwt from 'jsonwebtoken';
 import secret from "../config/jwtsecret";
 import User from "../models/User";
 
-export interface IUser {
-    name: String,
-    email: String,
-    password: String
-}
-
 export default class UserController {
     static store = async (req: Request, res: Response) => {
         const { email, name, password } = req.body;
@@ -47,13 +41,11 @@ export default class UserController {
             const passwordCompare = bcrypt.compareSync(password, user.password);
 
             if (passwordCompare) {
-                const token = await jwt.sign({ id: user._id }, secret, {
-                    expiresIn: 60//86400=1dia
+                const token = await jwt.sign({email: user.email, id: user._id }, secret, {
+                    expiresIn: "1h"
                 });;
 
-                const id = user.id;
-
-                return res.json({ token, name: user.name });
+                return res.status(200).json({token});
             } else {
                 return res.status(400).json({ error: "Password is not matched" });
             }
