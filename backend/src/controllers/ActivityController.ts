@@ -6,7 +6,7 @@ import FilterConditions from "../utils/filterConditions";
 
 export default class ActivityController {
     static store = async (req: Request, res: Response) => {
-        const { name } = req.query;
+        const { city_name } = req.query;
 
         //@ts-ignore
         const id = req.userId
@@ -17,7 +17,7 @@ export default class ActivityController {
         try {
 
             //@ts-ignore
-            const climate = await openWeatherApi(name);
+            const climate = await openWeatherApi(city_name);
 
             if (climate) {
                 const activity = await getActivities();
@@ -28,10 +28,11 @@ export default class ActivityController {
 
                 for (var i = 0; i < suggestions.length; i++) {
                     //@ts-ignore
-                    const { activity_title, suggested_location, suggested_weather_conditions } = suggestions[i]
+                    const {id, activity_title, suggested_location, suggested_weather_conditions } = suggestions[i]
                     const uns: any = await unsplashApi(activity_title)
 
                     data.push({
+                        id: id,
                         city: climate.data.name,
                         activity_title, suggested_location,
                         suggested_weather_conditions,
@@ -43,6 +44,7 @@ export default class ActivityController {
                 const activities = await Activity.create(data);
 
                 res.status(200).json(activities)
+                console.log(activities)
 
             }
 
@@ -53,7 +55,7 @@ export default class ActivityController {
 
     static getActivity = async (req: Request, res: Response) => {
         const { city_name } = req.query;
-
+        
         let suggestions = [];
         let data: Array<Object> = [];
 
@@ -72,10 +74,11 @@ export default class ActivityController {
 
                 for (var i = 0; i < suggestions.length; i++) {
                     //@ts-ignore
-                    const { activity_title, suggested_location, suggested_weather_conditions } = suggestions[i]
+                    const {id, activity_title, suggested_location, suggested_weather_conditions } = suggestions[i]
                     const uns: any = await unsplashApi(activity_title)
 
-                    data.push({ 
+                    data.push({
+                        id: id,
                         city: name, 
                         activity_title, 
                         suggested_location, 
@@ -89,7 +92,7 @@ export default class ActivityController {
             }
 
         } catch (err) {
-            return res.status(400).json({ error: "Activity registration failed" });
+            return res.status(400).json({ error: "Activity not found" });
         }
     }
 

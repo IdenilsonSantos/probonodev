@@ -10,6 +10,6 @@ router.post('/login', User.login);
 
 router.get('/activity/city', ActivityController.getActivity);
 router.get('/activities/last', checkToken, ActivityController.getLastActivitiesByUser);
-router.post('/activity/city', checkToken, ActivityController.store);
+router.get('/activity/user/save', checkToken, ActivityController.store);
 
 export default router;
