@@ -1,24 +1,25 @@
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import ActPage from './pages/ActPage/ActPage';
+import LastActPage from './pages/LastActPage/LastActPage';
+import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './routes/protectedRoutes';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <BrowserRouter>
+   <Routes>
+   <>
+   <Route exact path='/activities/last' element={<ProtectedRoute/>}>
+      <Route exact path='/activities/last' element={<LastActPage/>}/>
+</Route>
+   <Route path="/" element={<ActPage/>} exact/>
+     <Route path="/login" element={<LoginPage/>} exact/>
+     
+   </>
+   </Routes>
+   </BrowserRouter>
   );
 }
 

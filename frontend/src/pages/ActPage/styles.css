@@ -1,0 +1,42 @@
+.frm {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .frm-box {
+      width: 90%;
+  }
+  
+  .card-frm {
+    width: 50%;
+    margin: 0 auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .frm-grp {
+      display: flex;
+      width: 100%;
+      margin-top: 20px;
+  }
+  .btn-send {
+    width: 90px;
+    margin-left: 10px;
+  }
+
+  .card-sug {
+      width: 300px;
+      margin: 10px;
+      padding: 10px;
+      font-size: 12px;
+
+     
+  }
+
+  .card-sug img {
+      width: 100%;
+      height: 300px;
+  }
